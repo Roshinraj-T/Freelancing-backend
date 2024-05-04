@@ -1,8 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  const config = new DocumentBuilder()
+.setTitle('Simple CRUD API')
+.setDescription('CRUD Using NestJS and MySQL') .
+setVersion('1.0')
+.addTag('CRUD') .build();
+const document = SwaggerModule.createDocument(app, config); SwaggerModule.setup('gighub',
+app, document);
+  await app.listen(process.env.PORT);
+
 }
 bootstrap();
