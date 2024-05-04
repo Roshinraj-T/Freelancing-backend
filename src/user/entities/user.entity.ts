@@ -275,6 +275,9 @@ import {
     @ManyToOne(() => Location)
     @JoinColumn({ name: 'locationId' })
     location: Location;
+
+    @Column()
+    address : string; 
   
     @ManyToOne(() => ExperienceLevel)
     @JoinColumn({ name: 'experienceLevelId' })

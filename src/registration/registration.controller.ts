@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { RegistrationService } from './registration.service';
 import { CreateRegistrationDto } from './dto/create-registration.dto';
 import { UpdateRegistrationDto } from './dto/update-registration.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('registration')
+@ApiTags('Registration')
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
