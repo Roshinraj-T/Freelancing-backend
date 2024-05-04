@@ -14,6 +14,8 @@ export class UserService {
     @InjectRepository(DurationOption) // Injecting the repository for the User entity
     private readonly durationRepository: Repository<DurationOption>,
   ) {}
+
+
   async getDurationOption(){
      return await this.durationRepository
      .createQueryBuilder('u')
