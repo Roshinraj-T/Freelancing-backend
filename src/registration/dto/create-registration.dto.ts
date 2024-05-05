@@ -34,6 +34,6 @@ export class SignUpDto {
     roleId : number;
 
     @ApiProperty()
-    professionId
+    professionId : number
 }
 

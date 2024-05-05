@@ -34,7 +34,11 @@ export class RegistrationController {
       });
       return;
     } else{
-      await this.registrationService.createAccount(loginData)
+      let data = await this.registrationService.createAccount(loginData);
+      response.status(HttpStatus.OK).json({
+        message: 'Account Created Successfully',
+        data
+      });
     }
   }
 }

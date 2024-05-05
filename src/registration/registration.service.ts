@@ -18,7 +18,7 @@ export class RegistrationService {
       .findOne({ where: { email} })
   }
   
-  async createAccount(loginData : SignUpDto){
-    await this.userRepository.save(loginData)
+  async createAccount(loginData : any){
+    return await this.userRepository.save(loginData)
   }
 }

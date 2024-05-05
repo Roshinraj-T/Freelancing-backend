@@ -17,11 +17,30 @@ export class UserController {
     @Req() request : Request
   ) {
     let data: IMaster[] = await this.userService.getDurationOption();
-    response.status(HttpStatus.OK).json(
-      {
-        data: data,
-        message: 'Duration Options data'
-      }
-    )
+    response.status(HttpStatus.OK).json(data)
+  }
+  @Get('getProfessionData')
+  async getProfessionData(
+    @Res() response : Response,
+    @Req() request : Request
+  ) {
+    let data: IMaster[] = await this.userService.getProfessionData();
+    response.status(HttpStatus.OK).json(data)
+  }
+  @Get('getExperienceLevelData')
+  async getExperienceLevelData(
+    @Res() response : Response,
+    @Req() request : Request
+  ) {
+    let data: IMaster[] = await this.userService.getExperienceLevelData();
+    response.status(HttpStatus.OK).json(data)
+  }
+  @Get('getLocationData')
+  async getLocationData(
+    @Res() response : Response,
+    @Req() request : Request
+  ) {
+    let data: IMaster[] = await this.userService.getLocationData();
+    response.status(HttpStatus.OK).json(data)
   }
 }
