@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { DurationOption, ExperienceLevel, Location, Profession, User } from './entities/user.entity';
+import { DurationOption, ExperienceLevel, JobStatus, JobType, Jobs, Location, Profession, User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -22,6 +22,12 @@ export class UserService {
 
     @InjectRepository(Location) // Injecting the repository for the User entity
     private readonly locationRepository: Repository<Location>,
+
+    @InjectRepository(Jobs) // Injecting the repository for the User entity
+    private readonly jobsRepository: Repository<Jobs>,
+
+    @InjectRepository(JobType) // Injecting the repository for the User entity
+    private readonly jobTypeRepository: Repository<JobType>,
   ) {}
 
 
@@ -51,5 +57,30 @@ export class UserService {
       .select('u.id, u.name')
       .orderBy('u.name', 'ASC')
       .getRawMany();
+  }
+  async postAJob(data){
+    await this.jobsRepository.save(data)
+  }
+  async getJobType() {
+    return await this.jobTypeRepository
+      .createQueryBuilder('u')
+      .select('u.id, u.name')
+      .orderBy('u.name', 'ASC')
+      .getRawMany();
+  }
+  async getMyJobs(id : number){
+    return await this.jobsRepository
+      .createQueryBuilder('job')
+      .leftJoin(Profession,'p','p.id = job.professionId')
+      .leftJoin(DurationOption,'d','d.id = job.durationOptionId')
+      .leftJoin(ExperienceLevel,'e','e.id = job.experienceLevelId')
+      .leftJoin(JobType,'jt','jt.id = job.jobTypeId')
+      .leftJoin(JobStatus,'js','js.id = job.jobStatusId')      
+      .select(`job.id,job.description,job.address,
+      js.name as jobStatusName,jt.name as jobTypeName,
+      e.name as experienceLevelName,d.name as durationName,
+      p.name as professionName`)
+      .where('clientId = :id',{id})
+      .getRawMany()
   }
 }

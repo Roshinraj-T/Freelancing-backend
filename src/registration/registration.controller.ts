@@ -25,19 +25,26 @@ export class RegistrationController {
   }
   @Post('signUp')
   async signUp(@Body() loginData: SignUpDto, @Res() response: Response) {
-    const user = await this.registrationService.validateUser(
-      loginData.email
-    );
-    if(user){
+    try{
+      const user = await this.registrationService.validateUser(
+        loginData.email
+      );
+      if(user){
+        response.status(HttpStatus.UNAUTHORIZED).json({
+          message: 'Email Already Exist',
+        });
+        return;
+      } else{
+        let data = await this.registrationService.createAccount(loginData);
+        response.status(HttpStatus.OK).json({
+          message: 'Account Created Successfully',
+          data
+        });
+      }
+    }
+    catch{
       response.status(HttpStatus.UNAUTHORIZED).json({
-        message: 'Email Already Exist',
-      });
-      return;
-    } else{
-      let data = await this.registrationService.createAccount(loginData);
-      response.status(HttpStatus.OK).json({
-        message: 'Account Created Successfully',
-        data
+        message: 'Unauthorized User',
       });
     }
   }

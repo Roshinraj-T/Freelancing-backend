@@ -223,25 +223,25 @@ import {
   
     @ManyToOne(() => Location)
     @JoinColumn({ name: 'locationId' })
-    location: Location;
+    locationId: Location;
   
     @Column()
     phoneNumber: string;
   
     @ManyToOne(() => ExperienceLevel)
     @JoinColumn({ name: 'experienceLevelId' })
-    experienceLevel: ExperienceLevel;
+    experienceLevelId: ExperienceLevel;
   
     @Column({nullable:true})
     rating: number;
   
     @ManyToOne(() => Role)
     @JoinColumn({ name: 'roleId' })
-    role: Role;
+    roleId: Role;
 
     @ManyToOne(() => Profession)
     @JoinColumn({ name: 'professionId' })
-    profession: Role;
+    professionId: Role;
   
     @CreateDateColumn()
     createdAt: Date;
@@ -274,34 +274,34 @@ import {
   
     @ManyToOne(() => Location)
     @JoinColumn({ name: 'locationId' })
-    location: Location;
+    locationId: Location;
 
     @Column()
     address : string; 
   
     @ManyToOne(() => ExperienceLevel)
     @JoinColumn({ name: 'experienceLevelId' })
-    experienceLevel: ExperienceLevel;
+    experienceLevelId: ExperienceLevel;
   
     @ManyToOne(() => JobType)
     @JoinColumn({ name: 'jobTypeId' })
-    jobType: JobType;
+    jobTypeId: JobType;
   
     @ManyToOne(() => Profession)
     @JoinColumn({ name: 'professionId' })
-    profession: Profession;
+    professionId: Profession;
   
     @ManyToOne(() => DurationOption)
     @JoinColumn({ name: 'durationOptionId' })
-    durationOption: DurationOption;
+    durationOptionId: DurationOption;
   
     @ManyToOne(() => User)
     @JoinColumn({ name: 'clientId' })
-    client: User;
+    clientId: User;
   
     @ManyToOne(() => User, { nullable: true })
     @JoinColumn({ name: 'freelancerId' })
-    freelancer: User;
+    freelancerId: User;
   
     @Column({ nullable: true })
     remarksAboutClient: string;
@@ -317,7 +317,7 @@ import {
   
     @ManyToOne(() => JobStatus)
     @JoinColumn({ name: 'jobStatusId' })
-    jobStatus: JobStatus;
+    jobStatusId: JobStatus;
   
     @CreateDateColumn()
     createdAt: Date;
@@ -346,11 +346,11 @@ import {
   
     @ManyToOne(() => User)
     @JoinColumn({ name: 'freelancerId' })
-    freelancer: User;
+    freelancerId: User;
 
     @ManyToOne(() => Jobs)
     @JoinColumn({ name: 'jobId' })
-    job: Jobs;
+    jobId: Jobs;
   
     @Column({ nullable: true })
     isApplied: boolean;
