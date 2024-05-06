@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from '@nestjs/config';
 import { RegistrationModule } from './registration/registration.module';
 import { UserModule } from './user/user.module';
+import { WebSocketModule } from './web-socket/web-socket.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UserModule } from './user/user.module';
       }),
     RegistrationModule,
     UserModule,
+    WebSocketModule,
   ],
   controllers: [AppController],
   providers: [AppService],

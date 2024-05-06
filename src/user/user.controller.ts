@@ -1,14 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req, HttpStatus, Query } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { ApplyJobDto, CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IMaster } from 'src/core/interface';
 import { Response } from 'express';
+import { WebSocketGateway } from 'src/web-socket/web-socket.gateway';
 @Controller('user')
 @ApiTags('Users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly webSocketGateway : WebSocketGateway
+    ) {}
 
 
   @Get('getDurationOption')
@@ -70,7 +74,8 @@ export class UserController {
     @Body() data : any
   ){
     try{
-      await this.userService.postAJob(data)
+      await this.userService.postAJob(data);
+      await this.webSocketGateway.completedResult(data);
       response.status(HttpStatus.OK).json({
         message : 'Job Posted Successfully'
       })
@@ -82,8 +87,8 @@ export class UserController {
       })
     }
   }
-  @Get('getMyJobs/:id')
-  async getMyJobs(
+  @Get('getClientJobs/:id')
+  async getClientJobs(
     @Res() response : Response,
     @Req() request : Request,
     @Param('id') id : number
@@ -91,16 +96,142 @@ export class UserController {
     try{
       console.log(id);
       
-      let data = await this.userService.getMyJobs(id);
+      let data = await this.userService.getClientJobs(id);
       response.status(HttpStatus.OK).json({
         data,
-        message : 'get My Jobs retrieved'
+        message : 'Jobs retrieved',
+        success : true
       })
     }catch(err) {
       console.log(err);
       
       response.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Unable to get Duration Option',
+        message: 'Unable to get Jobs',
+      });
+    }
+  }
+
+  @Get('getAllJobs')
+  async getAllJobs(
+    @Res() response : Response,
+    @Req() request : Request,
+    @Query() data : any
+  ) {
+    try{
+      let jobData = await this.userService.getAllJobs(data.userId);
+      response.status(HttpStatus.OK).json({
+        data : jobData,
+        message : 'Jobs retrieved',
+        success : true
+      })
+    }catch(err) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Unable to get Jobs',
+      });
+    }
+  }
+
+  @Post('applyJob')
+  async applyJob(
+    @Res() response : Response,
+    @Req() request : Request,
+    @Body() data : ApplyJobDto
+  ){
+    try{
+      console.log(data);
+      
+        let jobData =  await this.userService.applyJob(data)
+        response.status(HttpStatus.OK).json({
+          message : 'Job Applied Successfully',
+          data : jobData,
+          success : true
+        })
+    }catch(err) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Unable to get Jobs',
+      });
+    }
+  }
+  @Get('getNotification')
+  async getNotification(
+    @Res() response : Response,
+    @Req() request : Request,
+    @Query() data : any
+  ) {
+    try{
+      let jobData = await this.userService.getNotification(data.userId);
+      response.status(HttpStatus.OK).json({
+        data : jobData,
+        message : 'Job retrieved',
+        success : true
+      })
+    }catch(err) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Unable to get Job',
+      });
+    }
+  }
+  @Get('getFreelancerWork/:id')
+  async getFreelancerWork(
+    @Res() response : Response,
+    @Req() request : Request,
+    @Param('id') id : number
+  ) {
+    try{
+      let jobData = await this.userService.getFreelancerWork(id);
+      response.status(HttpStatus.OK).json({
+        data : jobData,
+        message : 'Jobs retrieved',
+        success : true
+      })
+    }catch(err) {
+      console.log(err);
+      
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Unable to get Jobs',
+      });
+    }
+  }
+  
+  @Get('getApplicantDetails/:id')
+  async getApplicantDetails(
+    @Res() response : Response,
+    @Req() request : Request,
+    @Param('id') id : number
+  ) {
+    try{
+      let jobData = await this.userService.getApplicantDetails(id);
+      response.status(HttpStatus.OK).json({
+        data : jobData,
+        message : 'Jobs retrieved',
+        success : true
+      })
+    }catch(err) {
+      console.log(err);
+      
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Unable to get Jobs',
+      });
+    }
+  }
+  @Post('acceptApplication')
+  async acceptApplication(
+    @Res() response : Response,
+    @Req() request : Request,
+    @Body() data : ApplyJobDto
+  ){
+    try{
+      console.log(data);
+      
+        let jobData =  await this.userService.acceptApplication(data)
+        response.status(HttpStatus.OK).json({
+          message : 'Job Applied Successfully',
+          data : jobData,
+          success : true
+        })
+    }catch(err) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Unable to get Jobs',
       });
     }
   }
