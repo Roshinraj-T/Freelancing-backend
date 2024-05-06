@@ -128,12 +128,11 @@ export class UserService {
     .limit(1)
     .getRawOne();
   }
-  
   async getFreelancerWork(freelancerId: number) {
     return await this.jobApplyRepository
       .createQueryBuilder('ja') // Alias for JobApply
-      .leftJoinAndSelect('ja.jobId', 'job') // Join Jobs with alias 'job'
-      .leftJoinAndSelect('job.locationId', 'location') // Join Location
+      .leftJoinAndSelect('ja.jobId', 'job') // Correct the join to 'job'
+      .leftJoinAndSelect('job.locationId', 'location') // Correct the alias for Location
       .leftJoinAndSelect('job.experienceLevelId', 'experience') // Join ExperienceLevel
       .leftJoinAndSelect('job.jobTypeId', 'jobType') // Join JobType
       .leftJoinAndSelect('job.professionId', 'profession') // Join Profession
@@ -150,11 +149,12 @@ export class UserService {
         'profession.name as professionName',
         'location.name as locationName',
         'job.createdAt as date',
+        'CASE WHEN ja.freelancerId = :freelancerId THEN 1 ELSE 0 END as isSelected', // Correct CASE statement
       ])
-      .where('ja.freelancerId = :freelancerId', { freelancerId }) // Use parameterized query
-      .orderBy('job.createdAt', 'DESC') // Order by creation date in descending order
-      .getRawMany(); // Return raw data with selected fields
-  } 
+      .where('ja.freelancerId = :freelancerId', { freelancerId }) // Correctly pass parameter
+      .orderBy('job.createdAt', 'DESC') // Order by creation date
+      .getRawMany(); // Retrieve raw results
+  }
   async getApplicantDetails(jobId: number) {
     return await this.jobApplyRepository
       .createQueryBuilder('ja') // Alias for JobApply
